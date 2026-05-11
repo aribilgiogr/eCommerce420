@@ -16,7 +16,7 @@ namespace Tools.Helpers
         Task<IEnumerable<T>> ReadManyAsync(Expression<Func<T, bool>>? expression = null, params string[] includes);
 
         Task UpdateAsync(T entity);
-        Task UpdateMany(IEnumerable<T> entities);
+        Task UpdateManyAsync(IEnumerable<T> entities);
 
         Task DeleteAsync(object key);
         Task DeleteAsync(T entity);
