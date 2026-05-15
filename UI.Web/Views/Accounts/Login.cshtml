@@ -1,0 +1,62 @@
+﻿@model Core.Concretes.DTOs.LoginDto
+
+@{
+    ViewData["Title"] = "Giriş Yap";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-12 col-md-8 col-lg-5">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4 p-sm-5">
+
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold">Hoş Geldiniz</h2>
+                    <p class="text-muted">Lütfen hesabınıza giriş yapın</p>
+                </div>
+
+                <form asp-action="Login">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <!-- Email Field (Floating Label) -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="Email" class="form-control" placeholder="name@example.com" />
+                        <label asp-for="Email"></label>
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Password Field (Floating Label) -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="Password" class="form-control" placeholder="Parola" />
+                        <label asp-for="Password"></label>
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Remember Me -->
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" asp-for="RememberMe" />
+                        <label class="form-check-label text-muted" asp-for="RememberMe">
+                            @Html.DisplayNameFor(model => model.RememberMe)
+                        </label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">Giriş Yap</button>
+                    </div>
+                    <!-- Register Link -->
+                    <div class="text-center mt-4">
+                        <span class="text-muted">Henüz kayıt olmadınız mı?</span>
+                        <a asp-action="Register" class="text-decoration-none fw-semibold">Kayıt Ol</a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
