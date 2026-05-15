@@ -1,11 +1,20 @@
-﻿using Core.Concretes.DTOs;
+﻿using Core.Abstracts.IServices;
+using Core.Concretes.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace UI.Web.Controllers
 {
     public class AccountsController : Controller
     {
+        private readonly IAuthService service;
+
+        public AccountsController(IAuthService service)
+        {
+            this.service = service;
+        }
+
         [Authorize]
         public IActionResult Index()
         {
@@ -18,9 +27,24 @@ namespace UI.Web.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult Login(LoginDto model, string? returnUrl)
+        public async Task<IActionResult> Login(LoginDto model, string? returnUrl)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                var reply = await service.LoginAsync(model);
+                if (reply.IsSuccess)
+                {
+                    return Redirect(returnUrl ?? "/");
+                }
+                else
+                {
+                    foreach (var error in reply.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error);
+                    }
+                }
+            }
+            return View(model);
         }
 
         public IActionResult Register(string? returnUrl)
@@ -29,14 +53,30 @@ namespace UI.Web.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult Register(RegisterDto model, string? returnUrl)
+        public async Task<IActionResult> Register(RegisterDto model, string? returnUrl)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                var reply = await service.RegisterAsync(model);
+                if (reply.IsSuccess)
+                {
+                    return Redirect(returnUrl ?? "/");
+                }
+                else
+                {
+                    foreach (var error in reply.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error);
+                    }
+                }
+            }
+            return View(model);
         }
 
         [HttpPost, Authorize]
-        public IActionResult Logout(string? returnUrl)
+        public async Task<IActionResult> Logout(string? returnUrl)
         {
+            await service.LogoutAsync();
             return Redirect(returnUrl ?? "/");
         }
     }

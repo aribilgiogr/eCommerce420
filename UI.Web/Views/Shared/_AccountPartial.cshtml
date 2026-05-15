@@ -29,7 +29,7 @@
                 <li><hr class="dropdown-divider opacity-50"></li>
                 <li>
                     <!-- Çıkış işlemi güvenli olması için POST yöntemiyle form üzerinden yapılmalıdır -->
-                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+                    <form class="form-inline" asp-controller="accounts" asp-action="logout" method="post">
                         <button type="submit" class="dropdown-item text-danger py-2">
                             <i class="bi bi-box-arrow-right me-2"></i>Çıkış Yap
                         </button>
