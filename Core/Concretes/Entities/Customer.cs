@@ -9,5 +9,7 @@ namespace Core.Concretes.Entities
         public string Lastname { get; set; } = null!;
         public string? ProfilePicture { get; set; }
         public string AccountId { get; set; } = null!;
+        public virtual ICollection<Cart> Carts { get; set; } = [];
+        public virtual ICollection<Order> Orders { get; set; } = [];
     }
 }
