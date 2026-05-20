@@ -18,6 +18,38 @@ namespace Data
         private ICustomerRepository? customers;
         public ICustomerRepository Customers => customers ??= new CustomerRepository(context);
 
+
+        private IProductRepository? products;
+        public IProductRepository Products => products ??= new ProductRepository(context);
+
+
+        private ICategoryRepository? categories;
+        public ICategoryRepository Categories => categories ??= new CategoryRepository(context);
+
+
+        private ISubcategoryRepository? subcategories;
+        public ISubcategoryRepository Subcategories => subcategories ??= new SubcategoryRepository(context);
+
+
+        private IBrandRepository? brands;
+        public IBrandRepository Brands => brands ??= new BrandRepository(context);
+
+
+        private ICartRepository? carts;
+        public ICartRepository Carts => carts ??= new CartRepository(context);
+
+
+        private ICartItemRepository? cartItems;
+        public ICartItemRepository CartItems => cartItems ??= new CartItemRepository(context);
+
+
+        private IOrderRepository? orders;
+        public IOrderRepository Orders => orders ??= new OrderRepository(context);
+
+
+        private IOrderItemRepository? orderItems;
+        public IOrderItemRepository OrderItems => orderItems ??= new OrderItemRepository(context);
+
         public async Task<Reply> CommitAsync()
         {
             try

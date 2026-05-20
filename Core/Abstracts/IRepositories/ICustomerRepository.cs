@@ -8,7 +8,5 @@ using Tools.Helpers;
 
 namespace Core.Abstracts.IRepositories
 {
-    public interface ICustomerRepository : IRepository<Customer>
-    {
-    }
+    public interface ICustomerRepository : IRepository<Customer> { }
 }
