@@ -1,3 +1,4 @@
+using Core.Abstracts.IServices;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using UI.Web.Models;
@@ -7,15 +8,17 @@ namespace UI.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IShopService shopService;
+        public HomeController(ILogger<HomeController> logger, IShopService shopService)
         {
             _logger = logger;
+            this.shopService = shopService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var products = await shopService.GetProducts();
+            return View(products);
         }
 
         public IActionResult Privacy()

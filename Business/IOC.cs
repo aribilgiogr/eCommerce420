@@ -24,6 +24,8 @@ namespace Business
 
             services.AddScoped<IAuthService, AuthService>();
 
+            services.AddScoped<IShopService, ShopService>();
+
             return services;
         }
     }
