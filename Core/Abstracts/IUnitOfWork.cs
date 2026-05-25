@@ -1,9 +1,4 @@
 ﻿using Core.Abstracts.IRepositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Tools.Responses;
 
 namespace Core.Abstracts
@@ -19,6 +14,9 @@ namespace Core.Abstracts
         ICartItemRepository CartItems { get; }
         IOrderRepository Orders { get; }
         IOrderItemRepository OrderItems { get; }
+
+        IProductImageRepository ProductImages { get; }
+        IProductFeatureRepository ProductFeatures { get; }
 
         Task<Reply> CommitAsync();
     }

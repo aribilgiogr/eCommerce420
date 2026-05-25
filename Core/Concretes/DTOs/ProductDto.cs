@@ -20,6 +20,7 @@ namespace Core.Concretes.DTOs
         public decimal DiscountedPrice { get; set; }
         public decimal DiscountRate { get; set; }
         public int StockQuantitiy { get; set; }
+        public string? CoverImage { get; set; }
     }
 
     public class ProductDetailDto

@@ -41,7 +41,16 @@ namespace Tools.Helpers
             await DeleteManyAsync(entities);
         }
 
+        // Belirtilen EntityKey/PrimaryKey'e sahip bir varlığı veritabanından okumak için kullanılır.
         public virtual async Task<T?> ReadAsync(object key) => await _set.FindAsync(key);
+
+        // Belirtilen sorguya uygun verilerin ilkini okumak için kullanılır.
+        public async Task<T?> ReadAsync(Expression<Func<T, bool>>? expression = null, params string[] includes)
+        {
+            // Yapılan sorguya göre birden fazla sonuç dönebilir, ancak biz sadece ilk sonucu almak istiyoruz. Bu nedenle, ReadManyAsync metodunu çağırarak tüm sonuçları alıyoruz ve ardından FirstOrDefault() ile ilk sonucu döndürüyoruz.
+            // ContinueWith kullanarak, ReadManyAsync metodunun tamamlanmasını bekliyoruz ve ardından Result özelliği ile sonuçlara erişiyoruz. Bu yapıyı kullanmazsak , ReadManyAsync metodunun tamamlanmasını beklemeden FirstOrDefault() çağrısı yapmaya çalışırız ve bu da hataya neden olabilir.
+            return await ReadManyAsync(expression, includes).ContinueWith(t => t.Result.FirstOrDefault());
+        }
 
         public virtual async Task<IEnumerable<T>> ReadManyAsync(Expression<Func<T, bool>>? expression = null, params string[] includes)
         {

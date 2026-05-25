@@ -8,6 +8,7 @@ namespace Tools.Helpers
         Task CreateManyAsync(IEnumerable<T> entities);
 
         Task<T?> ReadAsync(object key);
+        Task<T?> ReadAsync(Expression<Func<T, bool>>? expression = null, params string[] includes);
         Task<IEnumerable<T>> ReadManyAsync(Expression<Func<T, bool>>? expression = null, params string[] includes);
 
         Task UpdateAsync(T entity);

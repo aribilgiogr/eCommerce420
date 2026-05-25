@@ -50,6 +50,15 @@ namespace Data
         private IOrderItemRepository? orderItems;
         public IOrderItemRepository OrderItems => orderItems ??= new OrderItemRepository(context);
 
+
+        private IProductImageRepository? productImages;
+        public IProductImageRepository ProductImages => productImages ??= new ProductImageRepository(context);
+
+
+        private IProductFeatureRepository? productFeatures;
+        public IProductFeatureRepository ProductFeatures => productFeatures ??= new ProductFeatureRepository(context);
+
+
         public async Task<Reply> CommitAsync()
         {
             try
