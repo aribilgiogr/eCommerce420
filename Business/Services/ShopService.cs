@@ -14,26 +14,35 @@ namespace Business.Services
             this.unitOfWork = unitOfWork;
         }
 
-        private async Task<Cart> GetCartAsync(int customerId)
+        private async Task<Cart> GetCartAsync(string userId)
         {
-            var cart = await unitOfWork.Carts.ReadAsync(x => x.CustomerId == customerId && x.Active, "Items");
-            if (cart == null)
+            var customer = await unitOfWork.Customers.ReadAsync(x => x.AccountId == userId);
+            if (customer != null)
             {
-                cart = new Cart { CustomerId = customerId };
-                await unitOfWork.Carts.CreateAsync(cart);
-                var reply = await unitOfWork.CommitAsync();
-                if (!reply.IsSuccess)
+                int customerId = customer.Id;
+                var cart = await unitOfWork.Carts.ReadAsync(x => x.CustomerId == customerId && x.Active, "Items");
+                if (cart == null)
                 {
+                    cart = new Cart { CustomerId = customerId };
+                    await unitOfWork.Carts.CreateAsync(cart);
+                    var reply = await unitOfWork.CommitAsync();
+                    if (!reply.IsSuccess)
+                    {
 
-                    throw new Exception(string.Join(", ", reply.Errors));
+                        throw new Exception(string.Join(", ", reply.Errors));
+                    }
                 }
+                return cart;
             }
-            return cart;
+            else
+            {
+                throw new Exception("Customer not found.");
+            }
         }
 
-        public async Task AddToCart(int customerId, int productId, int quantity = 1)
+        public async Task AddToCart(string userId, int productId, int quantity = 1)
         {
-            var cart = await GetCartAsync(customerId);
+            var cart = await GetCartAsync(userId);
             if (cart.Items.Any(x => x.ProductId == productId))
             {
                 var item = cart.Items.First(x => x.ProductId == productId);
@@ -57,9 +66,23 @@ namespace Business.Services
             }
         }
 
-        public Task DecreasingCart(int customerId, int productId)
+        public async Task DecreasingCart(string userId, int productId)
         {
-            throw new NotImplementedException();
+            var cart = await GetCartAsync(userId);
+            var item = cart.Items.FirstOrDefault(x => x.ProductId == productId);
+
+            if (item == null) throw new Exception("Product not found in cart.");
+
+            if (item.Quantity > 1)
+            {
+                item.Quantity -= 1;
+                await unitOfWork.CartItems.UpdateAsync(item);
+                var reply = await unitOfWork.CommitAsync();
+                if (!reply.IsSuccess)
+                {
+                    throw new Exception(string.Join(", ", reply.Errors));
+                }
+            }
         }
 
         public async Task<IEnumerable<ProductListItemDto>> GetProducts()
@@ -85,14 +108,35 @@ namespace Business.Services
                    };
         }
 
-        public Task IncreasingCart(int customerId, int productId)
+        public async Task IncreasingCart(string userId, int productId)
         {
-            throw new NotImplementedException();
+            var cart = await GetCartAsync(userId);
+            var item = cart.Items.FirstOrDefault(x => x.ProductId == productId);
+
+            if (item == null) throw new Exception("Product not found in cart.");
+
+            item.Quantity += 1;
+            await unitOfWork.CartItems.UpdateAsync(item);
+            var reply = await unitOfWork.CommitAsync();
+            if (!reply.IsSuccess)
+            {
+                throw new Exception(string.Join(", ", reply.Errors));
+            }
         }
 
-        public Task RemoveFromCart(int customerId, int productId)
+        public async Task RemoveFromCart(string userId, int productId)
         {
-            throw new NotImplementedException();
+            var cart = await GetCartAsync(userId);
+            var item = cart.Items.FirstOrDefault(x => x.ProductId == productId);
+            if (item != null)
+            {
+                await unitOfWork.CartItems.DeleteAsync(item);
+                var reply = await unitOfWork.CommitAsync();
+                if (!reply.IsSuccess)
+                {
+                    throw new Exception(string.Join(", ", reply.Errors));
+                }
+            }
         }
     }
 }

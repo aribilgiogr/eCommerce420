@@ -7,9 +7,9 @@ namespace Core.Abstracts.IServices
         Task<IEnumerable<ProductListItemDto>> GetProducts();
 
         // Sepet Sistemi
-        Task AddToCart(int customerId, int productId, int quantity); // Ürün ekleme
-        Task RemoveFromCart(int customerId, int productId); // Ürün çıkarma (bir ürünün tümünü)
-        Task IncreasingCart(int customerId, int productId); // Sepetteki bir ürünün miktarını artırma
-        Task DecreasingCart(int customerId, int productId); // Sepetteki bir ürünün miktarını azaltma
+        Task AddToCart(string userId, int productId, int quantity); // Ürün ekleme
+        Task RemoveFromCart(string userId, int productId); // Ürün çıkarma (bir ürünün tümünü)
+        Task IncreasingCart(string userId, int productId); // Sepetteki bir ürünün miktarını artırma
+        Task DecreasingCart(string userId, int productId); // Sepetteki bir ürünün miktarını azaltma
     }
 }

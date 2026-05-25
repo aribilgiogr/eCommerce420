@@ -18,6 +18,12 @@
 					<h6 class="text-muted">
 						@item.SubcategoryName | @item.CategoryName
 					</h6>
+					@if (User!.Identity!.IsAuthenticated)
+					{
+						<form asp-action="addToCart" asp-route-productId="@item.Id" method="post">
+							<button type="submit" class="btn btn-primary w-100">Add to Cart</button>
+						</form>
+					}
 				</div>
 			</div>
 		</div>
