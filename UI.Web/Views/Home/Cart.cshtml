@@ -3,7 +3,7 @@
 
 <section class="row g-5">
     <div class="col-md-9">
-        <div class="card h-100">
+        <div class="card">
             <div class="card-header">
                 <h5>Sepetinizdeki Ürünleriniz</h5>
             </div>
@@ -16,6 +16,7 @@
                             <th>Miktar</th>
                             <th>Fiyat</th>
                             <th>Toplam Fiyat</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,16 +41,22 @@
                                 </td>
                                 <td>@item.ProductName</td>
                                 <td>
-                                    <button class="btn btn-sm btn-outline-secondary">-</button>
-                                    <input type="text" disabled value="@item.Quantity" />
-                                    <button class="btn btn-sm btn-outline-secondary">+</button>
+                                    <div class="input-group input-group-sm" style="width: 100px;">
+                                        <form asp-action="DecreaseQuantity" asp-controller="Home" asp-route-productId="@item.ProductId" method="Post">
+                                            <button class="btn btn-outline-secondary" type="submit">-</button>
+                                        </form>
+                                        <input type="text" class="form-control text-center" disabled value="@item.Quantity" />
+                                        <form asp-action="IncreaseQuantity" asp-controller="Home" asp-route-productId="@item.ProductId" method="Post">
+                                            <button class="btn btn-outline-secondary" type="submit">+</button>
+                                        </form>
+                                    </div>
                                 </td>
                                 <td>
                                     @if (item.DiscountedPrice < item.ListPrice)
                                     {
                                         <div>
-                                            <span class="text-decoration-line-through">@item.ListPrice.ToString("C")</span>
-                                            <span class="text-danger fw-semibold">@item.DiscountedPrice.ToString("C")</span>
+                                            <span class="text-decoration-line-through text-muted" style="font-size: 0.85rem;">@item.ListPrice.ToString("C")</span>
+                                            <div class="text-danger fw-semibold">@item.DiscountedPrice.ToString("C")</div>
                                         </div>
                                     }
                                     else
@@ -57,17 +64,58 @@
                                         <div>@item.ListPrice.ToString("C")</div>
                                     }
                                 </td>
-                                <td class="text-dark fw-semibold">@item.DiscountedTotal.ToString("C")</td>
+                                <td class="text-dark fw-semibold align-middle">@item.DiscountedTotal.ToString("C")</td>
+                                <td>
+                                    <!-- Kaldır Butonu -->
+                                    <form asp-action="RemoveFromCart" asp-controller="Home" asp-route-productId="@item.ProductId" method="Post">
+                                        <button class="btn btn-sm btn-outline-danger" type="submit" title="Sepetten Kaldır">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
             <div class="card-footer">
-                <p class="card-text text-muted">ℹ Sepetinizdeki ürünler siparişe dönüşmediği sürece bütün fiyat değişimlerinden etkilenecektir.</p>
+                <p class="card-text text-muted mb-0"><small>ℹ Sepetinizdeki ürünler siparişe dönüşmediği sürece bütün fiyat değişimlerinden etkilenecektir.</small></p>
             </div>
         </div>
     </div>
+    
     <div class="col-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>Sipariş Özeti</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        Ürünlerin Toplamı
+                        <span class="fw-medium">@Model.TotalPrice.ToString("C")</span>
+                    </li>
+                    @if (Model.TotalDiscount > 0)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 text-danger">
+                            İndirimler
+                            <span class="fw-medium">- @Model.TotalDiscount.ToString("C")</span>
+                        </li>
+                    }
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 mt-2 border-top-2">
+                        <span class="fw-bold">Ödenecek Tutar</span>
+                        <span class="fs-5 fw-bold text-success">@Model.TotalDue.ToString("C")</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-footer bg-white border-top-0 pt-0">
+                <button class="btn btn-success w-100 py-2 fw-semibold">
+                    Alışverişi Tamamla <i class="bi bi-chevron-right ms-1"></i>
+                </button>
+                <a href="/" class="btn btn-link w-100 text-decoration-none text-muted mt-2">
+                    Alışverişe Devam Et
+                </a>
+            </div>
+        </div>
     </div>
 </section>

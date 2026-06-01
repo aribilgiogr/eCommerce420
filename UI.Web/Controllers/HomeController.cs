@@ -49,12 +49,28 @@ namespace UI.Web.Controllers
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
             await shopService.RemoveFromCart(userId, productId);
-            return RedirectToAction("Index");
+            return RedirectToAction("Cart");
         }
 
         public async Task<IActionResult> Cart()
         {
             return View(await shopService.GetCurrentCartAsync(User));
+        }
+
+        [HttpPost, Authorize]
+        public async Task<IActionResult> IncreaseQuantity(int productId)
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            await shopService.IncreasingCart(userId, productId);
+            return RedirectToAction("Cart");
+        }
+
+        [HttpPost, Authorize]
+        public async Task<IActionResult> DecreaseQuantity(int productId)
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            await shopService.DecreasingCart(userId, productId);
+            return RedirectToAction("Cart");
         }
     }
 }
