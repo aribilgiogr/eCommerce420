@@ -87,12 +87,11 @@
                                 </div>
 
                                 <!-- Kaldır Butonu -->
-                                <button class="btn btn-sm btn-outline-danger"
-                                        data-product-id="@item.ProductId"
-                                        onclick="removeFromCart(@item.ProductId)"
-                                        title="Sepetten Kaldır">
-                                    <i class="bi bi-trash"></i>
-                                </button>
+                                <form asp-action="RemoveFromCart" asp-controller="Home" asp-route-productId="@item.ProductId" method="Post">
+                                    <button class="btn btn-sm btn-outline-danger" type="submit" title="Sepetten Kaldır">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
                             </div>
                         }
                     </div>
@@ -119,7 +118,7 @@
 
                     <!-- Sepete Git Butonu -->
                     <div class="p-2 border-top">
-                        <a href="@Url.Action("Index", "Cart")" class="btn btn-primary w-100 btn-sm">
+                        <a asp-action="cart" asp-controller="home" class="btn btn-primary w-100 btn-sm">
                             <i class="bi bi-bag-check me-1"></i>Sepete Git
                         </a>
                     </div>

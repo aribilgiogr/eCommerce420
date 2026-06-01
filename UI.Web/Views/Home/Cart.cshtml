@@ -1,0 +1,73 @@
+﻿@using Core.Concretes.DTOs
+@model CartDto
+
+<section class="row g-5">
+    <div class="col-md-9">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5>Sepetinizdeki Ürünleriniz</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-striped table-hover m-0">
+                    <thead class="text-bg-dark">
+                        <tr>
+                            <th>Görsel</th>
+                            <th>Ürün</th>
+                            <th>Miktar</th>
+                            <th>Fiyat</th>
+                            <th>Toplam Fiyat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.ProductImage))
+                                    {
+                                        <img src="@item.ProductImage"
+                                             alt="@item.ProductName"
+                                             class="rounded"
+                                             style="width: 60px; height: 60px; object-fit: cover;">
+                                    }
+                                    else
+                                    {
+                                        <div class="bg-light rounded d-flex align-items-center justify-content-center fw-bold text-muted"
+                                             style="width: 60px; height: 60px;">
+                                            <i class="bi bi-image"></i>
+                                        </div>
+                                    }
+                                </td>
+                                <td>@item.ProductName</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-secondary">-</button>
+                                    <input type="text" disabled value="@item.Quantity" />
+                                    <button class="btn btn-sm btn-outline-secondary">+</button>
+                                </td>
+                                <td>
+                                    @if (item.DiscountedPrice < item.ListPrice)
+                                    {
+                                        <div>
+                                            <span class="text-decoration-line-through">@item.ListPrice.ToString("C")</span>
+                                            <span class="text-danger fw-semibold">@item.DiscountedPrice.ToString("C")</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div>@item.ListPrice.ToString("C")</div>
+                                    }
+                                </td>
+                                <td class="text-dark fw-semibold">@item.DiscountedTotal.ToString("C")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                <p class="card-text text-muted">ℹ Sepetinizdeki ürünler siparişe dönüşmediği sürece bütün fiyat değişimlerinden etkilenecektir.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+    </div>
+</section>

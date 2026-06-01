@@ -12,7 +12,7 @@ namespace UI.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IShopService shopService;
-        
+
         public HomeController(ILogger<HomeController> logger, IShopService shopService)
         {
             _logger = logger;
@@ -42,6 +42,19 @@ namespace UI.Web.Controllers
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
             await shopService.AddToCart(userId, productId, quantity);
             return RedirectToAction("Index");
+        }
+
+        [HttpPost, Authorize]
+        public async Task<IActionResult> RemoveFromCart(int productId)
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            await shopService.RemoveFromCart(userId, productId);
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Cart()
+        {
+            return View(await shopService.GetCurrentCartAsync(User));
         }
     }
 }
