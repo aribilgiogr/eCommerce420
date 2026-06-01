@@ -2,6 +2,7 @@
 using Core.Abstracts.IServices;
 using Core.Concretes.DTOs;
 using Core.Concretes.Entities;
+using System.Security.Claims;
 
 namespace Business.Services
 {
@@ -20,7 +21,7 @@ namespace Business.Services
             if (customer != null)
             {
                 int customerId = customer.Id;
-                var cart = await unitOfWork.Carts.ReadAsync(x => x.CustomerId == customerId && x.Active, "Items");
+                var cart = await unitOfWork.Carts.ReadAsync(x => x.CustomerId == customerId && x.Active, "Items.Product.Images");
                 if (cart == null)
                 {
                     cart = new Cart { CustomerId = customerId };
@@ -137,6 +138,23 @@ namespace Business.Services
                     throw new Exception(string.Join(", ", reply.Errors));
                 }
             }
+        }
+
+        public async Task<CartDto> GetCurrentCartAsync(ClaimsPrincipal user)
+        {
+
+            var cart = await GetCartAsync(user.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var items = cart.Items.Select(x => new CartItemDto
+            {
+                ProductId = x.ProductId,
+                ProductName = x.Product!.Name,
+                Quantity = x.Quantity,
+                ListPrice = x.Product.ListPrice,
+                DiscountedPrice = x.Product.ListPrice * (100 - x.Product.DiscountRate) / 100,
+                ProductImage = x.Product.Images.FirstOrDefault(i => i.IsCover)?.ImagePath
+            }).ToList();
+
+            return new CartDto { Items = items };
         }
     }
 }
